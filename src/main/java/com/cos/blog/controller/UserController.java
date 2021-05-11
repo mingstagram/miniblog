@@ -19,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.cos.blog.model.GoogleOauthToken;
@@ -97,12 +98,49 @@ public class UserController {
 		// /WEB-INF/views/index.jsp
 		return "user/joinForm";
 	}
-
+	
 	@GetMapping("/auth/logout")
 	public String logout() {
 		// /WEB-INF/views/index.jsp
 		session.invalidate();
 		return "redirect:/";
+	}
+	
+	@GetMapping("/auth/facebook/callback")
+	public @ResponseBody String facebookCallback(String code, Model model) { 
+		
+		// POST 방식으로 key=value 데이터를 요청 (페이스북쪽으로)
+		// Retrofit2
+		// OkHttp
+		// RestTemplate
+
+
+		RestTemplate rt = new RestTemplate();
+
+		// HttpBody 오브젝트 생성
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("client_id", "284427873395875");
+		params.add("redirect_uri", "http://localhost:8000/auth/facebook/callback");
+		params.add("client_secret", "d63d402a2d6e749d765d89abded7b97e");
+		params.add("code", code);
+		System.out.println("code : " + code);
+		
+		// HttpBody를 하나의 오브젝트에 담기
+		HttpEntity<MultiValueMap<String, String>> facebookTokenRequest = 
+				new HttpEntity<>(params); // facebookTokenRequest <- 바디값을 가지고있는 엔티티가 된다.
+
+		// Http 요청하기 - POST 방식으로 - 그리고 response 변수의 응답 받음.
+		ResponseEntity<String> response = rt.exchange(
+				"https://graph.facebook.com/v10.0/oauth/access_token",
+				HttpMethod.GET,
+				facebookTokenRequest,
+				String.class
+				); 
+
+		
+		
+		
+		return response.getBody();
 	}
 
 	@GetMapping("/auth/kakao/callback")
