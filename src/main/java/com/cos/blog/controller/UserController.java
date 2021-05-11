@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import com.cos.blog.model.GoogleOauthToken;
 import com.cos.blog.model.GoogleProfile;
 import com.cos.blog.model.KakaoProfile;
+import com.cos.blog.model.NaverProfile;
 import com.cos.blog.model.OAuthToken;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
@@ -106,6 +107,113 @@ public class UserController {
 		return "redirect:/";
 	}
 	
+	// 21-05-11
+	// 개발자 : 김민국
+	// 네이버로그인 기능 구현 (Oauth2.0)
+	@GetMapping("/auth/naver/callback")
+	public String naverCallback(String code, Model model) {
+		
+		// POST 방식으로 key=value 데이터를 요청 (네이버쪽으로)
+		// Retrofit2
+		// OkHttp
+		// RestTemplate
+
+
+		RestTemplate rt = new RestTemplate();
+		
+		// HttpHeader 오브젝트 생성
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+		// HttpBody 오브젝트 생성
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("grant_type", "authorization_code");
+		params.add("client_id", "nmliM_FmEvrfsR5ZPvjC");
+		params.add("client_secret", "58rRVbgsh1");
+		params.add("code", code);
+		
+		// HttpBody를 하나의 오브젝트에 담기
+		HttpEntity<MultiValueMap<String, String>> naverTokenRequest = 
+				new HttpEntity<>(params, headers); // naverTokenRequest <- 바디값을 가지고있는 엔티티가 된다.
+		
+		// Http 요청하기 - POST 방식으로 - 그리고 response 변수의 응답 받음.
+		ResponseEntity<String> response = rt.exchange(
+				"https://nid.naver.com/oauth2.0/token",
+				HttpMethod.POST,
+				naverTokenRequest,
+				String.class
+				); 
+		
+		// Gson, Json Simple, ObjectMapper // 응답받은 JSON값 Object로 변경해주는 템플릿
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		OAuthToken oauthToken = null;
+
+		try {
+			oauthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		RestTemplate rt2 = new RestTemplate();
+
+		// HttpHeader 오브젝트 생성
+		HttpHeaders headers2 = new HttpHeaders();
+		headers2.add("Authorization", "Bearer " + oauthToken.getAccess_token());
+		headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+ 
+		// HttpHeader 를 하나의 오브젝트에 담기
+		HttpEntity<MultiValueMap<String, String>> naverProfileRequest2 = 
+				new HttpEntity<>(headers2);
+
+		// Http 요청하기 - POST 방식으로 - 그리고 response 변수의 응답 받음.
+		ResponseEntity<String> response2 = rt2.exchange(
+				"https://openapi.naver.com/v1/nid/me",
+				HttpMethod.POST,
+				naverProfileRequest2,
+				String.class
+				); 
+		
+		ObjectMapper objectMapper2 = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		NaverProfile naverProfile = null;
+
+		try {
+			naverProfile = objectMapper2.readValue(response2.getBody(), NaverProfile.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} 
+		
+		User naverUser = new User();
+		naverUser.setUsername(naverProfile.getResponse().mobile_e164);
+		naverUser.setPassword(cosKey); 
+		naverUser.setEmail(naverProfile.getResponse().email);
+
+		// 가입자, 비가입자 체크해서 처리
+		User originUser = userService.회원찾기(naverUser.getUsername());
+		if(originUser.getUsername() == null) {
+			System.out.println("기존 회원이 아니기에 자동 회원가입을 진행합니다.");
+			originUser.setUsername(naverProfile.getResponse().mobile_e164);
+			originUser.setPassword(cosKey); 
+			originUser.setEmail(naverProfile.getResponse().email);
+			originUser.setOauth("naver");
+			userService.회원가입(originUser);
+		}
+		System.out.println("자동 로그인을 진행합니다.");
+		// 로그인 처리
+		Authentication authentication = 
+				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(originUser.getUsername(), cosKey));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+		return "redirect:/";
+	}
+	
+	
 	@GetMapping("/auth/facebook/callback")
 	public @ResponseBody String facebookCallback(String code, Model model) { 
 		
@@ -117,6 +225,11 @@ public class UserController {
 
 		RestTemplate rt = new RestTemplate();
 
+		// HttpHeader 오브젝트 생성
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+		
 		// HttpBody 오브젝트 생성
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("client_id", "284427873395875");
@@ -127,7 +240,7 @@ public class UserController {
 		
 		// HttpBody를 하나의 오브젝트에 담기
 		HttpEntity<MultiValueMap<String, String>> facebookTokenRequest = 
-				new HttpEntity<>(params); // facebookTokenRequest <- 바디값을 가지고있는 엔티티가 된다.
+				new HttpEntity<>(params, headers); // facebookTokenRequest <- 헤더값, 바디값을 가지고있는 엔티티가 된다.
 
 		// Http 요청하기 - POST 방식으로 - 그리고 response 변수의 응답 받음.
 		ResponseEntity<String> response = rt.exchange(
