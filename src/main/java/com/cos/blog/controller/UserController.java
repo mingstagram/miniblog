@@ -235,8 +235,7 @@ public class UserController {
 		params.add("client_id", "284427873395875");
 		params.add("redirect_uri", "http://localhost:8000/auth/facebook/callback");
 		params.add("client_secret", "d63d402a2d6e749d765d89abded7b97e");
-		params.add("code", code);
-		System.out.println("code : " + code);
+		params.add("code", code); 
 		
 		// HttpBody를 하나의 오브젝트에 담기
 		HttpEntity<MultiValueMap<String, String>> facebookTokenRequest = 
@@ -245,17 +244,50 @@ public class UserController {
 		// Http 요청하기 - POST 방식으로 - 그리고 response 변수의 응답 받음.
 		ResponseEntity<String> response = rt.exchange(
 				"https://graph.facebook.com/v10.0/oauth/access_token",
-				HttpMethod.GET,
+				HttpMethod.POST,
 				facebookTokenRequest,
 				String.class
 				); 
 		
-		/////////////////////////////////////////////////오류 해결중 21-05-11
+		// Gson, Json Simple, ObjectMapper // 응답받은 JSON값 Object로 변경해주는 템플릿
+		ObjectMapper objectMapper = new ObjectMapper();
 
+		OAuthToken oauthToken = null;
+
+		try {
+			oauthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		
+		////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////////진행중
+		
+		RestTemplate rt2 = new RestTemplate();
+
+		// HttpBody 오브젝트 생성
+		MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
+		
+		params2.add("input_token", oauthToken.getAccess_token());
+		params2.add("access_token", "284427873395875|d63d402a2d6e749d765d89abded7b97e");
+		
+		// HttpHeader 를 하나의 오브젝트에 담기
+		HttpEntity<MultiValueMap<String, String>> facebookProfileRequest2 = 
+				new HttpEntity<>(params2);
+
+		// Http 요청하기 - POST 방식으로 - 그리고 response 변수의 응답 받음.
+		ResponseEntity<String> response2 = rt2.exchange(
+				"https://graph.facebook.com/debug_token",
+				HttpMethod.GET,
+				facebookProfileRequest2,
+				String.class
+				); 
 		
 		
-		
-		return response.getBody();
+		return response2.getBody();
 	}
 
 	@GetMapping("/auth/kakao/callback")
@@ -265,7 +297,6 @@ public class UserController {
 		// Retrofit2
 		// OkHttp
 		// RestTemplate
-
 
 		RestTemplate rt = new RestTemplate();
 
