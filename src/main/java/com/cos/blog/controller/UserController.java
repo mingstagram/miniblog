@@ -22,12 +22,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import com.cos.blog.model.FacebookProfile;
 import com.cos.blog.model.GoogleOauthToken;
 import com.cos.blog.model.GoogleProfile;
 import com.cos.blog.model.KakaoProfile;
 import com.cos.blog.model.NaverProfile;
 import com.cos.blog.model.OAuthToken;
 import com.cos.blog.model.RoleType;
+import com.cos.blog.model.SnsLogin;
 import com.cos.blog.model.User;
 import com.cos.blog.service.UserService;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -46,6 +48,9 @@ public class UserController {
 
 	@Value("${cos.key}")
 	private String cosKey;
+	
+	@Value("${cos.facebookEmail}")
+	private String cosEmail;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -54,8 +59,7 @@ public class UserController {
 	private HttpSession session;
 
 	@Autowired
-	private UserService userService;
-	 
+	private UserService userService;  
 	
 
 	@GetMapping("/auth/loginForm")
@@ -200,7 +204,8 @@ public class UserController {
 			originUser.setUsername(naverProfile.getResponse().mobile_e164);
 			originUser.setPassword(cosKey); 
 			originUser.setEmail(naverProfile.getResponse().email);
-			originUser.setOauth("naver");
+			originUser.setOauth(SnsLogin.NAVER);
+			originUser.setRole(RoleType.USER);
 			userService.회원가입(originUser);
 		}
 		System.out.println("자동 로그인을 진행합니다.");
@@ -213,9 +218,8 @@ public class UserController {
 		return "redirect:/";
 	}
 	
-	
 	@GetMapping("/auth/facebook/callback")
-	public @ResponseBody String facebookCallback(String code, Model model) { 
+	public String facebookCallback(String code, Model model) { 
 		
 		// POST 방식으로 key=value 데이터를 요청 (페이스북쪽으로)
 		// Retrofit2
@@ -262,32 +266,60 @@ public class UserController {
 			e.printStackTrace();
 		}
 		
-		////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////
-		///////////////////////////////////////////////////////////////////////////////진행중
-		
 		RestTemplate rt2 = new RestTemplate();
 
 		// HttpBody 오브젝트 생성
 		MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
-		
-		params2.add("input_token", oauthToken.getAccess_token());
-		params2.add("access_token", "284427873395875|d63d402a2d6e749d765d89abded7b97e");
-		
+		 
 		// HttpHeader 를 하나의 오브젝트에 담기
 		HttpEntity<MultiValueMap<String, String>> facebookProfileRequest2 = 
 				new HttpEntity<>(params2);
 
 		// Http 요청하기 - POST 방식으로 - 그리고 response 변수의 응답 받음.
 		ResponseEntity<String> response2 = rt2.exchange(
-				"https://graph.facebook.com/debug_token",
+				"https://graph.facebook.com/debug_token?input_token=" 
+						+ oauthToken.getAccess_token() 
+						+ "&access_token=284427873395875|d63d402a2d6e749d765d89abded7b97e",
 				HttpMethod.GET,
 				facebookProfileRequest2,
 				String.class
 				); 
 		
+		ObjectMapper objectMapper2 = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		FacebookProfile facebookProfile = null;
+
+		try {
+			facebookProfile = objectMapper2.readValue(response2.getBody(), FacebookProfile.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} 
 		
-		return response2.getBody();
+		User facebookUser = new User();
+		facebookUser.setUsername(facebookProfile.getData().user_id);
+		facebookUser.setPassword(cosKey); 
+		facebookUser.setEmail(cosEmail);
+		
+		// 가입자, 비가입자 체크해서 처리
+		User originUser = userService.회원찾기(facebookUser.getUsername());
+		if(originUser.getUsername() == null) {
+			System.out.println("기존 회원이 아니기에 자동 회원가입을 진행합니다.");
+			originUser.setUsername(facebookProfile.getData().user_id);
+			originUser.setPassword(cosKey); 
+			originUser.setEmail(cosEmail);
+			originUser.setOauth(SnsLogin.FACEBOOK); 
+			originUser.setRole(RoleType.USER);
+			userService.회원가입(originUser);
+		}
+		System.out.println("자동 로그인을 진행합니다.");
+		// 로그인 처리
+		Authentication authentication = 
+				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(facebookUser.getUsername(), cosKey));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		return "redirect:/";
 	}
 
 	@GetMapping("/auth/kakao/callback")
@@ -393,7 +425,8 @@ public class UserController {
 			System.out.println("기존 회원이 아니기에 자동 회원가입을 진행합니다.");
 			originUser.setUsername(kakaoProfile.getKakao_account().email + "_" + kakaoProfile.getId());
 			originUser.setPassword(cosKey);
-			originUser.setOauth("kakao");
+			originUser.setOauth(SnsLogin.KAKAO);
+			originUser.setRole(RoleType.USER);
 			originUser.setEmail(kakaoProfile.getKakao_account().email);
 			userService.회원가입(originUser);
 		}
@@ -500,7 +533,7 @@ public class UserController {
 		googleUser.setUsername(googleProfile2.getEmail() + "_" + googleProfile2.getId());
 		googleUser.setEmail(googleProfile2.getEmail());
 		googleUser.setRole(RoleType.USER);
-		googleUser.setOauth("google");
+		googleUser.setOauth(SnsLogin.GOOGLE);
 		googleUser.setPassword("alsrnr12");
 		
 		User originUser = userService.회원찾기(googleUser.getUsername());
