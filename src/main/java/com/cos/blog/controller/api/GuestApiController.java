@@ -28,10 +28,19 @@ public class GuestApiController {
 	@Autowired
 	private GuestService guestService;
 	
-	@PostMapping("/api/guest")
+	@PostMapping("/api/guestBook")
 	public ResponseDto<Integer> save(@RequestBody GuestBook guestBook, @AuthenticationPrincipal PrincipalDetail principal){
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-//		guestService.방명록쓰기(guestBook, principal.getUser());
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@");
+		guestService.방명록쓰기(guestBook);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
+	
+	@DeleteMapping("/api/guestBook/{id}")
+	public ResponseDto<Integer> delete(@PathVariable int id){
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@");
+		guestService.방명록삭제(id);
+		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+	}
+	
+	
 }

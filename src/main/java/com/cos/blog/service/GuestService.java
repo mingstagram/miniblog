@@ -31,13 +31,18 @@ public class GuestService {
 	private UserRepository userRepository; 
 	
 	@Transactional
-	public void 방명록쓰기(String writer, String password, String content) {
-		guestRepository.mSave(writer, password, content);
+	public void 방명록쓰기(GuestBook guestBook) {
+		guestRepository.save(guestBook);
 	}
 	
 	@Transactional(readOnly = true)
 	public List<GuestBook> 방명록목록(){
 		return guestRepository.findAll();
+	}
+	
+	@Transactional
+	public void 방명록삭제(int id) {
+		guestRepository.deleteById(id);
 	}
 	
 }

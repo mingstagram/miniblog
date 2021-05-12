@@ -21,19 +21,10 @@ public class GuestController {
 	@Autowired
 	private GuestService guestService;
 
-	@GetMapping("/auth/guestBook")
+	@GetMapping("/guest/guestBook")
 	public String guestBook(Model model) {
 		List<GuestBook> guestBook =  guestService.방명록목록();
 		model.addAttribute("guest", guestBook);
 		return "guest/guestBook";
-	}
-	
-	@PostMapping("/auth/guestBook")
-	public String saveGuestBook(String writer, String password, String content, Model model) { 
-		guestService.방명록쓰기(writer, password, content);
-		List<GuestBook> guestBook =  guestService.방명록목록();
-		model.addAttribute("guest", guestBook);
-		return "guest/guestBook";
-	}
-	
+	} 
 }

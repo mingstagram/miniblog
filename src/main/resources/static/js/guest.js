@@ -1,6 +1,6 @@
 let index = {
 	init:function(){
-		$("#btn-guest-save").on("click", ()=>{ // function(){} 대신에 ()=>{} 쓰는 이유는 this를 바인딩하기 위해서!
+		$("#btn-save").on("click", ()=>{ // function(){} 대신에 ()=>{} 쓰는 이유는 this를 바인딩하기 위해서!
 			this.save();
 		});
 	},
@@ -11,17 +11,32 @@ let index = {
 			password: $("#password").val(),
 			content: $("#content").val()
 		}; 
-		
+		console.log(data);
 		$.ajax({ 
 			type:"POST",
-			url: "/api/guest",
+			url: "/api/guestBook",
 			data: JSON.stringify(data), // http body 데이터
-			contentType: "application/json; charset=utf-8", // body데이터가 어떤 타입인지(MIME)
+			contentType: 'application/json; charset=utf-8', // body데이터가 어떤 타입인지(MIME)
 			dataType: "json" // 생략가능 // 요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 문자열 (생긴게 json이라면) => javascript오브젝트로 변경 
 		}).done(function(resp){
 			// 성공 
 			alert("방명록 작성이 완료되었습니다.");
-			location.href="/auth/guestBook";
+			location.href="/guest/guestBook";
+		}).fail(function(error){
+			// 실패
+			alert(JSON.stringify(error))
+		}); 
+	},
+	
+	bookDelete:function(id){  
+		$.ajax({
+			type:"DELETE",
+			url: "/api/guestBook/"+id,
+			dataType: "json"  
+		}).done(function(resp){
+			// 성공 
+			alert("방명록이 삭제완료되었습니다.");
+			location.href="/guest/guestBook";
 		}).fail(function(error){
 			// 실패
 			alert(JSON.stringify(error))

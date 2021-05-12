@@ -8,7 +8,7 @@
 	<br />
 	<div class="card" style="margin-bottom: 20px;">
 		<div class="card">
-			<form action="/auth/guestBook" method="POST">
+			<form>
 				<div class="card-body">
 					<div class="form-row" style="margin-bottom:10px;">
 						<div class="col">
@@ -26,27 +26,30 @@
 							placeholder="방명록을 입력해주세요."></textarea>
 					</div>
 				</div>
-				<div class="card-footer text-right">
-					<input type="submit"  class="btn btn-primary" value="등록" />
-				</div>
 			</form>
+			<div class="card-footer text-right">
+				<button id="btn-save" class="btn btn-primary" >등록</button>
+			</div>
 
 		</div>
 		<br>
 		<div class="card">
 			<ul id="guest-box" class="list-group">
+			
 				<c:forEach var="guest" items="${guest}">
+					
 					<li id="guest-${guest.id}"
 						class="list-group-item d-flex justify-content-between">
+						<input type="hidden" name="id"  value="${guest.id}">
 						<div>${guest.content}</div>
 						<div class="d-flex">
-							<div class="font-italic">작성자 : ${guest.writer}&nbsp;</div>
-							<%-- <c:if test="${principal.user.username == reply.user.username}">
-								<button onclick="index.replyDelete(${board.id}, ${reply.id})" class="badge">삭제</button>
-							</c:if> --%>
+							<div class="font-italic">작성자 : ${guest.writer}&nbsp;</div> 
+							<button onclick="index.bookDelete(${guest.id})"  class="badge">삭제</button> 
 						</div>
 					</li>
+					
 				</c:forEach>
+				
 			</ul>
 		</div>
 	</div>
@@ -76,6 +79,7 @@
 
 	</ul> --%>
 </div>
+<script src="/js/guest.js"></script>
 <!-- footer -->
 <%@ include file="../layout/footer.jsp"%>
 <!-- /footer -->
