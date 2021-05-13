@@ -11,7 +11,7 @@ let index = {
 			password: $("#password").val(),
 			content: $("#content").val()
 		}; 
-		console.log(data);
+		
 		$.ajax({ 
 			type:"POST",
 			url: "/api/guestBook",
@@ -28,7 +28,16 @@ let index = {
 		}); 
 	},
 	
-	bookDelete:function(id){  
+	bookDelete:function(id, password){   
+		
+		console.log(password);
+		var passwordConfirm = prompt("비밀번호를 입력해주세요.", "");
+		console.log(passwordConfirm);
+		if(passwordConfirm != password){
+			alert("비밀번호가 틀렸습니다.");
+			return false;
+		}
+		
 		$.ajax({
 			type:"DELETE",
 			url: "/api/guestBook/"+id,

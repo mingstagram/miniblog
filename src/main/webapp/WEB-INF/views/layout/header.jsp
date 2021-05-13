@@ -32,6 +32,7 @@
 					<ul class="navbar-nav">
 						<li class="nav-item"><a class="nav-link" href="/auth/loginForm">로그인</a></li>
 						<li class="nav-item"><a class="nav-link" href="/auth/joinForm">회원가입</a></li>  
+						<li class="nav-item"><a class="nav-link" href="/guest/guestBook">방명록</a></li>
 					</ul><!-- 인증이 안된 사람이 사용할 수 있는 페이지 에는 /auth/를 붙인다. -->
 				</c:when>
 

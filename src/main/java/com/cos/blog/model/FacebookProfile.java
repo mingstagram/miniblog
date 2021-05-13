@@ -1,8 +1,9 @@
 package com.cos.blog.model;
 
 import java.util.List;
+import lombok.Data;
 
-@lombok.Data
+@Data
 public class FacebookProfile {
 	public Data data;
 	public class Data {

@@ -38,13 +38,12 @@
 			
 				<c:forEach var="guest" items="${guest}">
 					
-					<li id="guest-${guest.id}"
-						class="list-group-item d-flex justify-content-between">
+					<li id="guest-${guest.id}" class="list-group-item d-flex justify-content-between">
 						<input type="hidden" name="id"  value="${guest.id}">
 						<div>${guest.content}</div>
 						<div class="d-flex">
 							<div class="font-italic">작성자 : ${guest.writer}&nbsp;</div> 
-							<button onclick="index.bookDelete(${guest.id})"  class="badge">삭제</button> 
+							<button onclick="index.bookDelete(${guest.id}, ${guest.password})"  class="badge">삭제</button> 
 						</div>
 					</li>
 					
