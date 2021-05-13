@@ -7,13 +7,6 @@
 <div class="container">
 	<div class="form-group"><h2><label>비밀번호 찾기</label></h2></div>
 	
-	<div class="form-group">
-		<c:choose>
-			<c:when test="${findPw != null}">
-				<label>이메일로 임시비밀번호를 발송했습니다.</label>
-			</c:when>
-		</c:choose>
-	</div>
 	
 	<form action="/auth/findPw" method="POST">
 		<div class="form-group">
