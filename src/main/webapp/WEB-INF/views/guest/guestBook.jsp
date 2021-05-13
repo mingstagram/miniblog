@@ -11,9 +11,9 @@
 			<form>
 				<div class="card-body">
 					<div class="form-row" style="margin-bottom:10px;">
-						<div class="col">
+						<div class="col"> 
 							<input type="text" class="form-control" id="writer"
-								placeholder="이름" name="writer">
+								placeholder="이름" name="writer"  >
 						</div>
 						<div class="col">
 							<input type="password" class="form-control"

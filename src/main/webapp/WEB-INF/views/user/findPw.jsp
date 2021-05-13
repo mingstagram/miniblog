@@ -23,7 +23,7 @@
 			<label for="email">Email</label> <input type="text" id="email"  name="email" class="form-control" placeholder="Enter email" id="email">
 		</div>
 		<div>
-			<button class="btn btn-info">Find PASSWORD</button>
+			<button onclick="alert('이메일로 임시비밀번호를 보내드렸습니다.')" class="btn btn-info">Find PASSWORD</button>
 		</div>  
 	</form>
 	

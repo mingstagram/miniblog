@@ -24,7 +24,7 @@ public class GuestController {
 	@GetMapping("/guest/guestBook")
 	public String guestBook(Model model) {
 		List<GuestBook> guestBook =  guestService.방명록목록();
-		model.addAttribute("guest", guestBook);
+		model.addAttribute("guest", guestBook); 
 		return "guest/guestBook";
 	} 
 }
