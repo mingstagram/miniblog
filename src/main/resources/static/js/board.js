@@ -12,6 +12,12 @@ let index = {
 		$("#btn-reply-save").on("click", ()=>{ 
 			this.replySave();
 		});
+		$("#btn-like").on("click", ()=>{ 
+			this.like();
+		});
+		$("#btn-unlike").on("click", ()=>{ 
+			this.unlike();
+		});
 	},
 	 
 	save:function(){ 
@@ -116,6 +122,44 @@ let index = {
 			// 성공 
 			alert("댓글삭제 성공");
 			location.href=`/board/${boardId}`;
+		}).fail(function(error){
+			// 실패
+			alert(JSON.stringify(error))
+		}); 
+	},
+	
+	like:function(){  
+		var id = $("#id").text();
+		
+		$.ajax({ 
+			method: "POST",
+			url: "/api/boardlike/"+id,
+			data: JSON.stringify(id),
+			contentType: "application/json; charset=utf-8", 
+			dataType: "json", 
+		}).done(function(resp){
+			// 성공 
+			alert("추천했습니다.");
+			location.href=`/board/${id}`;
+		}).fail(function(error){
+			// 실패
+			alert(JSON.stringify(error))
+		}); 
+	},
+	
+	unlike:function(){  
+		var id = $("#id").text();
+		
+		$.ajax({ 
+			type:"POST",
+			url: "/api/boardunlike/"+id,
+			data: JSON.stringify(id),
+			contentType: "application/json; charset=utf-8", 
+			dataType: "json", 
+		}).done(function(resp){
+			// 성공 
+			alert("비추천했습니다.");
+			location.href=`/board/${id}`;
 		}).fail(function(error){
 			// 실패
 			alert(JSON.stringify(error))

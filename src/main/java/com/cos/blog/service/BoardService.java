@@ -27,6 +27,7 @@ public class BoardService {
 	 
 	@Transactional
 	public void 글쓰기(Board board, User user) { // title, content
+		board.setBlike(0);
 		board.setCount(0);
 		board.setUser(user);
 		boardRepository.save(board);
@@ -41,11 +42,18 @@ public class BoardService {
 	public Board 글상세보기(int id) {
 		Board board = boardRepository.findById(id).orElseThrow(()->{
 			return new IllegalArgumentException("글 상세보기 실패 : 아이디를 찾을 수 없습니다.");
+		}); 
+		
+		return board;
+	}
+	
+	@Transactional
+	public void 조회수(int id) {
+		Board board = boardRepository.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("글 상세보기 실패 : 아이디를 찾을 수 없습니다.");
 		});
 		int cnt = board.getCount() + 1;
 		board.setCount(cnt);
-		
-		return board;
 	}
 	
 	@Transactional
@@ -63,6 +71,24 @@ public class BoardService {
 		board.setTitle(requestBoard.getTitle());
 		board.setContent(requestBoard.getContent());
 		// 해당 함수 종료시(Service가 종료될 때) 트랜잭션이 종료 됩니다. 이때 더티체킹 - 자동업데이트. DB flush
+	}
+	
+	@Transactional
+	public void 추천(int id) {
+		Board board = boardRepository.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("글 찾기 실패 : 아이디를 찾을 수 없습니다.");
+		});
+		int cnt = board.getBlike() + 1; 
+		board.setBlike(cnt); 
+	}
+	
+	@Transactional
+	public void 비추천(int id) {
+		Board board = boardRepository.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("글 찾기 실패 : 아이디를 찾을 수 없습니다.");
+		});
+		int cnt = board.getBlike() - 1; 
+		board.setBlike(cnt); 
 	}
 	
 	

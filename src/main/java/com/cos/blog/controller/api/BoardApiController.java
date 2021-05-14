@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,11 +16,15 @@ import com.cos.blog.dto.ReplySaveRequestDto;
 import com.cos.blog.dto.ResponseDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
+import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.service.BoardService;
 
 @RestController
 public class BoardApiController {
 	 
+	@Autowired
+	private BoardRepository boardRepository;
+	
 	@Autowired
 	private BoardService boardService;
 	
@@ -38,6 +43,18 @@ public class BoardApiController {
 	@PutMapping("/api/board/{id}")
 	public ResponseDto<Integer> update(@RequestBody Board board, @PathVariable int id){
 		boardService.글수정하기(board, id);
+		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+	}
+	
+	@PostMapping("/api/boardlike/{id}")
+	public ResponseDto<Integer> like(@PathVariable int id){  
+		boardService.추천(id); 
+		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
+	}
+	
+	@PostMapping("/api/boardunlike/{id}")
+	public ResponseDto<Integer> unlike(@PathVariable int id){
+		boardService.비추천(id); 
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
 	

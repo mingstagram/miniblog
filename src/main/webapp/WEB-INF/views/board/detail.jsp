@@ -13,8 +13,11 @@
 		</c:if>
 	</div>
 	<div class="card-header" style="margin-bottom: 10px;">
-		글 번호 : <span id="id"><i>${board.id}</i></span> 작성자 : <span><i>${board.user.username} </i></span> 
-		<span style="float:right;">조회수 : ${board.count}</span>
+		글 번호 : <span id="id"><i>${board.id}</i></span> 작성자 : <span><i>${board.user.username} </i></span>
+		<span style="float:right;"> 
+			<span id="blike">추천 : ${board.blike}</span> &nbsp;
+			<span >조회수 : ${board.count}</span>&nbsp;
+		</span>
 	</div>
 	<div class="form-group card-body" style="height: 20px">
 		<h3>${board.title}</h3>
@@ -23,7 +26,11 @@
 	<div class="form-group card-body">
 		<div>${board.content}</div>
 	</div>
-
+	<br/><br/><br/> 
+		<div style="margin:10px;">
+		  <button type="button" id="btn-like"  class="btn btn-Light"style="border: 1px solid black;" >👍</button>
+		  <button type="button" id="btn-unlike" class="btn btn-Light"style="border: 1px solid black;">👎</button> 
+		</div> 
 	<div class="card" style="margin-bottom: 20px;">
 		<div class="card">
 			<form>
