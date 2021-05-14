@@ -46,7 +46,7 @@ public class Board {
 	
 	private int count; // 조회수
 	
-	private int blike;
+	private int blike; // 추천/비추천
 	
 	// Many = Board, One = User -- 한명의 유저는 여러개의 게시글을 쓸 수 있다.
 	@ManyToOne(fetch = FetchType.EAGER) // EAGER : DB에 무조건 들고와라. default값 : LAZY : DB

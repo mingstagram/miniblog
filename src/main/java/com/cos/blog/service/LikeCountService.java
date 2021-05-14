@@ -11,6 +11,7 @@ import com.cos.blog.repository.LikeCountRepository;
 
 @Service
 public class LikeCountService { 
+	
 	@Autowired
 	private LikeCountRepository likeCountRepository;
 	

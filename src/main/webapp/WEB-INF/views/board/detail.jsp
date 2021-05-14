@@ -30,8 +30,7 @@
 	<div style="margin: 10px;">  
 		<c:choose>
 			<c:when test=""></c:when>
-		</c:choose>
-		<input type="hidden" id="likeCount" value="${likeCount}">
+		</c:choose> 
 		<button type="button"  class="btn btn-Light" onclick="index.like(${likeCount})"
 			style="border: 1px solid black;">👍</button>
 		<button type="button"  class="btn btn-Light" onclick="index.unlike(${likeCount})"
