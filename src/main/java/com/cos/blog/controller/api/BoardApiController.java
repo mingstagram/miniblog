@@ -15,18 +15,32 @@ import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.dto.ReplySaveRequestDto;
 import com.cos.blog.dto.ResponseDto;
 import com.cos.blog.model.Board;
+import com.cos.blog.model.LikeCount;
 import com.cos.blog.model.Reply;
+import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
+import com.cos.blog.repository.LikeCountRepository;
+import com.cos.blog.repository.UserRepository;
 import com.cos.blog.service.BoardService;
+import com.cos.blog.service.LikeCountService;
 
 @RestController
 public class BoardApiController {
-	 
+	 	
 	@Autowired
 	private BoardRepository boardRepository;
 	
 	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private LikeCountService likeCountService;
+	
+	@Autowired
+	private LikeCountRepository likeCountRepository;
 	
 	@PostMapping("/api/board")
 	public ResponseDto<Integer> save(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principal) { 
@@ -47,14 +61,34 @@ public class BoardApiController {
 	}
 	
 	@PostMapping("/api/boardlike/{id}")
-	public ResponseDto<Integer> like(@PathVariable int id){  
-		boardService.추천(id); 
+	public ResponseDto<Integer> like(@PathVariable("id") int boardId, @AuthenticationPrincipal PrincipalDetail principal){
+		User user = userRepository.findByUsername(principal.getUsername()).orElseThrow(()->{
+			return new IllegalArgumentException("유저 찾기 실패 : 아이디를 찾을 수 없습니다.");
+		});  
+		LikeCount likeCount = likeCountRepository.like(user.getId(), boardId);
+		if(likeCount == null) {
+			boardService.추천(boardId); 
+			Board board = boardRepository.findById(boardId).orElseThrow(()->{
+				return new IllegalArgumentException("글 상세보기 실패 : 아이디를 찾을 수 없습니다.");
+			});  
+			likeCountService.추천유무(board, user);
+		}
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
 	
 	@PostMapping("/api/boardunlike/{id}")
-	public ResponseDto<Integer> unlike(@PathVariable int id){
-		boardService.비추천(id); 
+	public ResponseDto<Integer> unlike(@PathVariable("id") int boardId, @AuthenticationPrincipal PrincipalDetail principal){
+		User user = userRepository.findByUsername(principal.getUsername()).orElseThrow(()->{
+			return new IllegalArgumentException("유저 찾기 실패 : 아이디를 찾을 수 없습니다.");
+		});  
+		LikeCount likeCount = likeCountRepository.like(user.getId(), boardId);
+		if(likeCount == null) {
+			boardService.비추천(boardId); 
+			Board board = boardRepository.findById(boardId).orElseThrow(()->{
+				return new IllegalArgumentException("글 상세보기 실패 : 아이디를 찾을 수 없습니다.");
+			});  
+			likeCountService.추천유무(board, user);
+		}
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}
 	

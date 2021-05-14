@@ -107,7 +107,7 @@ public class UserService {
 		String rawPassword = user.getPassword(); // 1234 원문
 		String encPassword = encoder.encode(rawPassword); // 해쉬
 		user.setPassword(encPassword);
-		user.setRole(RoleType.USER);
+		user.setRole(RoleType.USER); 
 		userRepository.save(user);
 	} 
 	

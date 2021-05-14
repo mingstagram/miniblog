@@ -24,6 +24,9 @@ public class BoardService {
 	
 	@Autowired
 	private ReplyRepository replyRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 	 
 	@Transactional
 	public void 글쓰기(Board board, User user) { // title, content
@@ -77,7 +80,7 @@ public class BoardService {
 	public void 추천(int id) {
 		Board board = boardRepository.findById(id).orElseThrow(()->{
 			return new IllegalArgumentException("글 찾기 실패 : 아이디를 찾을 수 없습니다.");
-		});
+		}); 
 		int cnt = board.getBlike() + 1; 
 		board.setBlike(cnt); 
 	}
@@ -86,7 +89,7 @@ public class BoardService {
 	public void 비추천(int id) {
 		Board board = boardRepository.findById(id).orElseThrow(()->{
 			return new IllegalArgumentException("글 찾기 실패 : 아이디를 찾을 수 없습니다.");
-		});
+		}); 
 		int cnt = board.getBlike() - 1; 
 		board.setBlike(cnt); 
 	}

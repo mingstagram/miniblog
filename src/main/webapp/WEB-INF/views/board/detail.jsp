@@ -27,10 +27,14 @@
 		<div>${board.content}</div>
 	</div>
 	<br /> <br /> <br />
-	<div style="margin: 10px;">
-		<button type="button" id="btn-like" class="btn btn-Light"
+	<div style="margin: 10px;">  
+		<c:choose>
+			<c:when test=""></c:when>
+		</c:choose>
+		<input type="hidden" id="likeCount" value="${likeCount}">
+		<button type="button"  class="btn btn-Light" onclick="index.like(${likeCount})"
 			style="border: 1px solid black;">👍</button>
-		<button type="button" id="btn-unlike" class="btn btn-Light"
+		<button type="button"  class="btn btn-Light" onclick="index.unlike(${likeCount})"
 			style="border: 1px solid black;">👎</button>
 		<div class="btn-group dropup" style="float: right;">
 			<button type="button" class="btn btn-Light dropdown-toggle"
@@ -48,7 +52,7 @@
 		<div class="card">
 			<form>
 				<input type="hidden" id="userId" value="${principal.user.id}">
-				<input type="hidden" id="boardId" value="${board.id}">
+				<input type="hidden" id="boardId" value="${board.id}"> 
 				<div class="card-body">
 					<textarea id="reply-content" class="form-control" rows="1"></textarea>
 				</div>

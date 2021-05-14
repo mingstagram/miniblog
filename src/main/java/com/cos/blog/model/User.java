@@ -40,7 +40,7 @@ public class User {
 	private String password; 
 	
 	@Column(nullable = false, length = 50) 
-	private String email;
+	private String email; 
 	 
 	// @ColumnDefault("user")
 	// DB는 RoleType이 없음.
