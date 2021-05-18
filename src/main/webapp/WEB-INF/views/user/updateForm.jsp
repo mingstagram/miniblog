@@ -34,7 +34,9 @@
 		<div class="form-group form-check"></div>
 
 	</form>
-	<button id="btn-update" class="btn btn-primary">회원수정</button>
+	<c:if test="${empty principal.user.oauth}">
+		<button id="btn-update" class="btn btn-primary">회원수정</button>
+	</c:if>
 </div>
 
 <script src="/js/user.js"></script>

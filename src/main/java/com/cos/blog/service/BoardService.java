@@ -49,6 +49,7 @@ public class BoardService {
 		
 		return board;
 	}
+	 
 	
 	@Transactional
 	public void 조회수(int id) {

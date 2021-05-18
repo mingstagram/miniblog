@@ -9,7 +9,7 @@
 		<div class="card m-1">
 			<div class="card-body">
 				<h4 class="card-title">${board.title}</h4>
-				<a href="/board/${board.id}" class="btn btn-primary">상세보기</a>
+				<a href="/board/${board.id}" class="btn btn-primary">상세보기 </a>
 				<h6 style="float:right">조회수 : ${board.count}</h6>
 			</div>
 		</div>
@@ -37,7 +37,6 @@
 </ul>
 
 </div>
-
 <!-- footer -->
 <%@ include file="layout/footer.jsp"%>
 <!-- /footer -->

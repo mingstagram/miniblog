@@ -1,6 +1,7 @@
 package com.cos.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -13,12 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.dto.ResponseDto;
+import com.cos.blog.model.Board;
 import com.cos.blog.model.LikeCount;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.LikeCountRepository;
 import com.cos.blog.repository.UserRepository;
-import com.cos.blog.service.BoardService;
-import com.cos.blog.service.LikeCountService;
+import com.cos.blog.service.BoardService; 
 
 @Controller
 public class BoardController {
@@ -62,5 +63,6 @@ public class BoardController {
 		model.addAttribute("board", boardService.글상세보기(id));
 		return "board/updateForm";
 	}
+	 
 	
 }

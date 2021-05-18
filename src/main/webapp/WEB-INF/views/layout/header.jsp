@@ -47,7 +47,12 @@
 					</ul>
 				</c:otherwise>
 			</c:choose>
-
+			
 		</div>
+		<form class="form-inline" action="#" method="GET">
+			    <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search">
+			    <button class="btn btn-primary"  type="submit" >Search</button>
+		</form>
 	</nav>
 	<br />
+	
