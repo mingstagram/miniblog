@@ -65,29 +65,17 @@ public class BoardApiController {
 		User user = userRepository.findByUsername(principal.getUsername()).orElseThrow(()->{
 			return new IllegalArgumentException("유저 찾기 실패 : 아이디를 찾을 수 없습니다.");
 		});  
-		LikeCount likeCount = likeCountRepository.like(user.getId(), boardId);
-		if(likeCount == null) {
+	    // likeCount 테이블 조회
+		LikeCount likeCount = likeCountRepository.like(user.getId(), boardId); 
+		if(likeCount == null) { // 값이 없으면 추천 + 1
 			boardService.추천(boardId); 
 			Board board = boardRepository.findById(boardId).orElseThrow(()->{
 				return new IllegalArgumentException("글 상세보기 실패 : 아이디를 찾을 수 없습니다.");
 			});  
 			likeCountService.추천유무(board, user);
-		}
-		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
-	}
-	
-	@PostMapping("/api/boardunlike/{id}")
-	public ResponseDto<Integer> unlike(@PathVariable("id") int boardId, @AuthenticationPrincipal PrincipalDetail principal){
-		User user = userRepository.findByUsername(principal.getUsername()).orElseThrow(()->{
-			return new IllegalArgumentException("유저 찾기 실패 : 아이디를 찾을 수 없습니다.");
-		});  
-		LikeCount likeCount = likeCountRepository.like(user.getId(), boardId);
-		if(likeCount == null) {
-			boardService.비추천(boardId); 
-			Board board = boardRepository.findById(boardId).orElseThrow(()->{
-				return new IllegalArgumentException("글 상세보기 실패 : 아이디를 찾을 수 없습니다.");
-			});  
-			likeCountService.추천유무(board, user);
+		} else { // 값이 있으면 값을 삭제하고 추천 - 1
+			likeCountRepository.delete(likeCount); 
+			boardService.비추천(boardId);   
 		}
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 	}

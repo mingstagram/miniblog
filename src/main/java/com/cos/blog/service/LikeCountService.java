@@ -15,7 +15,6 @@ public class LikeCountService {
 	@Autowired
 	private LikeCountRepository likeCountRepository;
 	
-	
 	@Transactional
 	public void 추천유무(Board board, User user) {  
 		LikeCount likeCount = new LikeCount();

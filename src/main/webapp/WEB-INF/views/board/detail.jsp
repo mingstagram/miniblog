@@ -23,18 +23,25 @@
 		<h3>${board.title}</h3>
 	</div>
 	<hr>
-	<div class="form-group card-body">
+	<div class="form-group card-body"><!-- ❤빨간별 --><!-- 🤍흰색별 -->
 		<div>${board.content}</div>
 	</div>
 	<br /> <br /> <br />
 	<div style="margin: 10px;">  
 		<c:choose>
-			<c:when test=""></c:when>
+			<c:when test="${empty likeCount}">
+				<button type="button"  class="btn btn-Light" onclick="index.like()"
+					style="border: 1px solid black;">❤ 공감</button>
+			</c:when>
+			<c:otherwise>
+				<button type="button"  class="btn btn-Light" onclick="index.like()"
+					style="border: 1px solid black;" >🤍 ${board.blike}</button>
+			</c:otherwise>
 		</c:choose> 
-		<button type="button"  class="btn btn-Light" onclick="index.like(${likeCount})"
-			style="border: 1px solid black;">👍</button>
+		<!-- <button type="button"  class="btn btn-Light" onclick="index.like(${likeCount})"
+			style="border: 1px solid black;">❤</button>
 		<button type="button"  class="btn btn-Light" onclick="index.unlike(${likeCount})"
-			style="border: 1px solid black;">👎</button>
+			style="border: 1px solid black;">🤍</button> -->
 		<div class="btn-group dropup" style="float: right;">
 			<button type="button" class="btn btn-Light dropdown-toggle"
 				data-toggle="dropdown" style="border: 1px solid black;">📤</button>

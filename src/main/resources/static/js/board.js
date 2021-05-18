@@ -128,52 +128,22 @@ let index = {
 		}); 
 	},
 	
-	like:function(likeCount){  
-		var id = $("#id").text();   
-		if(likeCount == undefined){
-			$.ajax({ 
-				method: "POST",
-				url: "/api/boardlike/"+id,
-				data: JSON.stringify(id),
-				contentType: "application/json; charset=utf-8", 
-				dataType: "json", 
-			}).done(function(resp){
-				// 성공 
-				alert("추천했습니다.");
-				location.href=`/board/${id}`;
-			}).fail(function(error){
-				// 실패
-				alert(JSON.stringify(error))
-			}); 
-		} else {
-			alert("이미 추천했습니다.");
+	like:function(){  
+		var id = $("#id").text();    
+		$.ajax({ 
+			method: "POST",
+			url: "/api/boardlike/"+id,
+			data: JSON.stringify(id),
+			contentType: "application/json; charset=utf-8", 
+			dataType: "json", 
+		}).done(function(resp){
+			// 성공 
 			location.href=`/board/${id}`;
-		}
-	},
-	
-	unlike:function(likeCount){  
-		var id = $("#id").text(); 
-		
-		if(likeCount == undefined){
-			$.ajax({ 
-				type:"POST",
-				url: "/api/boardunlike/"+id,
-				data: JSON.stringify(id),
-				contentType: "application/json; charset=utf-8", 
-				dataType: "json", 
-			}).done(function(resp){
-				// 성공 
-				alert("비추천했습니다.");
-				location.href=`/board/${id}`;
-			}).fail(function(error){
-				// 실패
-				alert(JSON.stringify(error))
-			}); 
-		} else {
-			alert("이미 추천했습니다.");
-			location.href=`/board/${id}`;
-		}
-	},
+		}).fail(function(error){
+			// 실패
+			alert(JSON.stringify(error))
+		});  
+	} 
 	
 }
 
