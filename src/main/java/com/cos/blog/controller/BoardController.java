@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.dto.ResponseDto;
@@ -40,19 +41,55 @@ public class BoardController {
 	 
 	
 	// 컨트롤러에서 세션을 어떻게 찾는지?
-	@GetMapping({"","/"})
+	@GetMapping({"","/","/?search={search}&page={page}"})
 	public String index(String search, Model model, Criteria cri) {
 		
 		PageMaker pageMaker = new PageMaker();
+		if(search == null) {
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(boardService.게시글갯수()); // 총 게시글의 수
+			List<Board> boards = boardService.현재페이지(cri);
+			model.addAttribute("search",search);
+			model.addAttribute("boards", boards); 
+			model.addAttribute("curPageNum", cri.getPage());
+			model.addAttribute("pageMaker", pageMaker);
+		} else {
+			System.out.println("1111111111111111111111111111111111111111");
+			pageMaker.setCri(cri);
+			System.out.println("222222222222222222222222222222");
+			pageMaker.setTotalCount(boardService.검색게시글갯수(search));
+			System.out.println("333333333333333333333333333333333");
+			List<Board> searchBoards = boardService.검색목록(search, cri);
+			System.out.println("4444444444444444444444444444444");
+			model.addAttribute("search",search);
+			model.addAttribute("boards", searchBoards); 
+			model.addAttribute("curPageNum", cri.getPage());
+			model.addAttribute("pageMaker", pageMaker);
+		}
+		/*
 		pageMaker.setCri(cri);
 		pageMaker.setTotalCount(boardService.게시글갯수()); // 총 게시글의 수
 		List<Board> boards = boardService.현재페이지(cri);
-		
+		model.addAttribute("boards", boards); 
 		model.addAttribute("curPageNum", cri.getPage());
 		model.addAttribute("pageMaker", pageMaker);
-		model.addAttribute("boards", boards); 
+		*/
+
 		return "index"; // viewResolver 작동!!
 	}
+	
+	/*
+	 * @PostMapping({"","/"}) public String searchIndex(String search, Model model,
+	 * Criteria cri) { PageMaker pageMaker = new PageMaker();
+	 * 
+	 * pageMaker.setCri(cri); pageMaker.setTotalCount(boardService.검색게시글갯수(search,
+	 * cri)); List<Board> searchBoards = boardService.검색목록(search, cri);
+	 * model.addAttribute("boards", searchBoards); model.addAttribute("curPageNum",
+	 * cri.getPage()); model.addAttribute("pageMaker", pageMaker);
+	 * 
+	 * return "index"; }
+	 */
+	
 
 	@GetMapping("/board/saveForm")
 	public String saveForm() {

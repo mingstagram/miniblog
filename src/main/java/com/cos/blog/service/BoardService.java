@@ -43,8 +43,8 @@ public class BoardService {
 	} 
 	
 	@Transactional
-	public List<Board> 검색목록(String search){ 
-		return boardRepository.findByTitleContaining(search);
+	public List<Board> 검색목록(String search, Criteria cri){ 
+		return boardRepository.findByTitle(search, cri.getPageStart(), cri.getPerPageNum());
 	}
 	
 	@Transactional(readOnly = true)
@@ -55,6 +55,12 @@ public class BoardService {
 	@Transactional
 	public int 게시글갯수() {
 		return (int)boardRepository.count();
+	}
+	
+	@Transactional
+	public int 검색게시글갯수(String search) {
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
+		return boardRepository.findByTitleCount(search);
 	}
 	
 	@Transactional
