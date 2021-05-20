@@ -2,6 +2,11 @@ package com.cos.blog.service;
 
 
 import org.springframework.data.domain.Pageable;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -9,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blog.dto.ReplySaveRequestDto;
 import com.cos.blog.model.Board;
+import com.cos.blog.model.Criteria;
 import com.cos.blog.model.Reply;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
@@ -36,9 +42,24 @@ public class BoardService {
 		boardRepository.save(board);
 	} 
 	
+	@Transactional
+	public List<Board> 검색목록(String search){ 
+		return boardRepository.findByTitleContaining(search);
+	}
+	
 	@Transactional(readOnly = true)
-	public Page<Board> 글목록(Pageable pageable){
-		return boardRepository.findAll(pageable);
+	public List<Board> 글목록(){ 
+		return boardRepository.findAll();
+	}
+	
+	@Transactional
+	public int 게시글갯수() {
+		return (int)boardRepository.count();
+	}
+	
+	@Transactional
+	public List<Board> 현재페이지(Criteria cri){
+		return boardRepository.page(cri.getPageStart(), cri.getPerPageNum());
 	}
 	
 	@Transactional

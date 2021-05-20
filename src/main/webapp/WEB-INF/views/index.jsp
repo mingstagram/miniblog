@@ -5,7 +5,7 @@
 <!-- /header -->
 <div class="container">
  
-	<c:forEach var="board" items="${boards.content}">
+	<c:forEach var="board" items="${boards}">
 		<div class="card m-1">
 			<div class="card-body">
 				<h4 class="card-title">${board.title}</h4>
@@ -14,28 +14,42 @@
 			</div>
 		</div>
 	</c:forEach>
-<ul class="pagination justify-content-center">
-<c:choose>
-	<c:when test="${boards.first}">
-		<li class="page-item disabled"><a class="page-link" href="?page=${boards.number-1}">Previous</a></li> 
-	</c:when>
-	<c:otherwise>
-		<li class="page-item"><a class="page-link" href="?page=${boards.number-1}">Previous</a></li>
-	</c:otherwise>
-</c:choose>
-  
-  <c:choose>
-	<c:when test="${boards.last}">
-		<li class="page-item disabled"><a class="page-link" href="?page=${boards.number+1}">Next</a></li> 
-	</c:when>
-	<c:otherwise>
-		<li class="page-item"><a class="page-link" href="?page=${boards.number+1}">Next</a></li>
-	</c:otherwise>
-</c:choose>
-  
-  
+	
+<ul class="pagination justify-content-center" style="margin-top:20px;">
+	<c:choose>
+		<c:when test="${pageMaker.prev}">
+			<li class="page-item"><a class="page-link" href="?page=${pageMaker.startPage-1}">Previous</a></li>
+		</c:when>
+		<c:otherwise>
+			<li class="page-item disabled"><a class="page-link" href="?page=${pageMaker.startPage-1}" disabled>Previous</a></li>
+		</c:otherwise>
+	</c:choose> 
+	
+	<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="pageNum">
+		<c:choose>
+			<c:when test="${pageNum == curPageNum}">
+				<li class="page-item active">
+					<a class="page-link" href="?page=${pageNum}">${pageNum}</a>
+				</li>
+			</c:when>
+			<c:otherwise>
+				<li class="page-item">
+					<a class="page-link" href="?page=${pageNum}">${pageNum}</a>
+				</li>
+			</c:otherwise>
+		</c:choose>
+	</c:forEach>
+	
+	<c:choose>
+		<c:when test="${pageMaker.next && pageMaker.endPage > 0}">
+			<li class="page-item"><a class="page-link" href="?page=${pageMaker.endPage + 1}">Next</a></li>
+		</c:when>
+		<c:otherwise>
+			<li class="page-item disabled"><a class="page-link" href="?page=${pageMaker.endPage + 1}">Next</a></li>
+		</c:otherwise>
+	</c:choose>   
 </ul>
-
+  
 </div>
 <!-- footer -->
 <%@ include file="layout/footer.jsp"%>

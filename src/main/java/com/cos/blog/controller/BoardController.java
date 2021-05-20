@@ -1,10 +1,13 @@
 package com.cos.blog.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.dto.ResponseDto;
 import com.cos.blog.model.Board;
+import com.cos.blog.model.Criteria;
 import com.cos.blog.model.LikeCount;
+import com.cos.blog.model.PageMaker; 
 import com.cos.blog.model.User;
 import com.cos.blog.repository.LikeCountRepository;
 import com.cos.blog.repository.UserRepository;
@@ -32,11 +37,20 @@ public class BoardController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	 
 	
 	// 컨트롤러에서 세션을 어떻게 찾는지?
 	@GetMapping({"","/"})
-	public String index(Model model, @PageableDefault(size=3, sort="id", direction=Sort.Direction.DESC) Pageable pageable) {	
-		model.addAttribute("boards", boardService.글목록(pageable));
+	public String index(String search, Model model, Criteria cri) {
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(boardService.게시글갯수()); // 총 게시글의 수
+		List<Board> boards = boardService.현재페이지(cri);
+		
+		model.addAttribute("curPageNum", cri.getPage());
+		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("boards", boards); 
 		return "index"; // viewResolver 작동!!
 	}
 
@@ -44,6 +58,7 @@ public class BoardController {
 	public String saveForm() {
 		return "board/saveForm";
 	}
+	
 
 	@GetMapping("/board/{id}")
 	public String findById(@PathVariable int id, Model model, @AuthenticationPrincipal PrincipalDetail principal) {

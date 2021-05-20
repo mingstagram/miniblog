@@ -12,6 +12,5 @@ public interface LikeCountRepository extends JpaRepository<LikeCount, Integer> {
 
 	@Query(value= "SELECT * FROM likecount WHERE userId=? AND boardId=?", nativeQuery = true)
 	LikeCount like(int userId, int boardId);
-	 
 	
 }
