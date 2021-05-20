@@ -53,27 +53,15 @@ public class BoardController {
 			model.addAttribute("boards", boards); 
 			model.addAttribute("curPageNum", cri.getPage());
 			model.addAttribute("pageMaker", pageMaker);
-		} else {
-			System.out.println("1111111111111111111111111111111111111111");
-			pageMaker.setCri(cri);
-			System.out.println("222222222222222222222222222222");
-			pageMaker.setTotalCount(boardService.검색게시글갯수(search));
-			System.out.println("333333333333333333333333333333333");
-			List<Board> searchBoards = boardService.검색목록(search, cri);
-			System.out.println("4444444444444444444444444444444");
+		} else { 
+			pageMaker.setCri(cri); 
+			pageMaker.setTotalCount(boardService.검색게시글갯수(search)); 
+			List<Board> searchBoards = boardService.검색목록(search, cri); 
 			model.addAttribute("search",search);
 			model.addAttribute("boards", searchBoards); 
 			model.addAttribute("curPageNum", cri.getPage());
 			model.addAttribute("pageMaker", pageMaker);
 		}
-		/*
-		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(boardService.게시글갯수()); // 총 게시글의 수
-		List<Board> boards = boardService.현재페이지(cri);
-		model.addAttribute("boards", boards); 
-		model.addAttribute("curPageNum", cri.getPage());
-		model.addAttribute("pageMaker", pageMaker);
-		*/
 
 		return "index"; // viewResolver 작동!!
 	}

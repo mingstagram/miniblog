@@ -58,8 +58,7 @@ public class BoardService {
 	}
 	
 	@Transactional
-	public int 검색게시글갯수(String search) {
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
+	public int 검색게시글갯수(String search) { 
 		return boardRepository.findByTitleCount(search);
 	}
 	

@@ -50,8 +50,8 @@
 			
 		</div>
 		<form class="form-inline" action="/" method="GET">
-			    <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search">
-			    <button class="btn btn-primary"  type="submit" >Search</button>
+			    <input class="form-control mr-sm-2" type="text" name="search" placeholder="게시글 검색">
+			    <button class="btn btn-primary"  type="submit" >검색</button>
 		</form>
 	</nav>
 	<br />
