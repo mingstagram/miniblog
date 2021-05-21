@@ -12,6 +12,29 @@ let index = {
 			content: $("#content").val()
 		}; 
 		
+		if(content.value==""){
+	        alert("Enter content");
+	        content.focus();
+	        return false;
+	    } else if(writer.value==""){
+	        alert("Enter writer");
+	        writer.focus();
+	        return false;
+	    }
+		
+		if(data.password.value==""){
+			alert("Enter password");
+			password.focus();
+			return false;
+		} else {
+			var num_check=/^[0-9]*$/;
+			if(!num_check.test(data.password)) { 
+				alert("비밀번호는 숫자만 입력해주세요."); 
+				return false;
+			}	
+		}
+
+		
 		if(confirm("작성하시겠습니까?")){
 		
 			$.ajax({ 

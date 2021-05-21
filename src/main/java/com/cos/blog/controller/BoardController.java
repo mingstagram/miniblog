@@ -62,7 +62,7 @@ public class BoardController {
 			model.addAttribute("curPageNum", cri.getPage());
 			model.addAttribute("pageMaker", pageMaker);
 		}
-
+	
 		return "index"; // viewResolver 작동!!
 	}
 	

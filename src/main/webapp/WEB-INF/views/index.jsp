@@ -16,7 +16,7 @@
 	</c:forEach>
 	
 <ul class="pagination justify-content-center" style="margin-top:20px;">
-<c:choose>
+<c:choose> 
 	<c:when test="${empty search}">
 		<c:choose>
 		<c:when test="${pageMaker.prev}">
@@ -51,6 +51,7 @@
 		</c:otherwise>
 	</c:choose>   
 	</c:when>
+
 	<c:otherwise>
 		<c:choose>
 		<c:when test="${pageMaker.prev}">
@@ -85,39 +86,7 @@
 		</c:otherwise>
 	</c:choose>   
 	</c:otherwise>
-</c:choose>
-	<%-- <c:choose>
-		<c:when test="${pageMaker.prev}">
-			<li class="page-item"><a class="page-link" href="?search=${search}&page=${pageMaker.startPage-1}">Previous</a></li>
-		</c:when>
-		<c:otherwise>
-			<li class="page-item disabled"><a class="page-link" href="?search=${search}&page=${pageMaker.startPage-1}" >Previous</a></li>
-		</c:otherwise>
-	</c:choose> 
-	
-	<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="pageNum">
-		<c:choose>
-			<c:when test="${pageNum == curPageNum}">
-				<li class="page-item active">
-					<a class="page-link" href="?search=${search}&page=${pageNum}">${pageNum}</a>
-				</li>
-			</c:when>
-			<c:otherwise>
-				<li class="page-item">
-					<a class="page-link" href="?search=${search}&page=${pageNum}">${pageNum}</a>
-				</li>
-			</c:otherwise>
-		</c:choose>
-	</c:forEach>
-	
-	<c:choose>
-		<c:when test="${pageMaker.next && pageMaker.endPage > 0}">
-			<li class="page-item"><a class="page-link" href="?search=${search}&page=${pageMaker.endPage + 1}">Next</a></li>
-		</c:when>
-		<c:otherwise>
-			<li class="page-item disabled"><a class="page-link" href="?search=${search}&page=${pageMaker.endPage + 1}">Next</a></li>
-		</c:otherwise>
-	</c:choose>   --%> 
+</c:choose> 
 </ul>
   
 </div>
