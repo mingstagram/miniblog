@@ -59,7 +59,15 @@ let index = {
 			password: $("#password").val(),
 			email: $("#email").val()
 		};
-		 
+		 if(password.value==""){
+        alert("Enter password");
+        password.focus();
+        return false;
+    }else if(email.value==""){
+        alert("Enter email");
+        email.focus();
+        return false;
+    }
 		$.ajax({ 
 			type:"PUT",
 			url: "/user",

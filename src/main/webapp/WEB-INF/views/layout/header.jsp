@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Bootstrap Example</title>
+<title>mini blog</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -19,6 +19,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 </head>
 <body> 
 	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -31,7 +32,8 @@
 				<c:when test="${empty principal}">
 					<ul class="navbar-nav">
 						<li class="nav-item"><a class="nav-link" href="/auth/loginForm">로그인</a></li>
-						<li class="nav-item"><a class="nav-link" href="/auth/joinForm">회원가입</a></li>
+						<li class="nav-item"><a class="nav-link" href="/auth/joinForm">회원가입</a></li>  
+						<li class="nav-item"><a class="nav-link" href="/guest/guestBook">방명록</a></li>
 					</ul><!-- 인증이 안된 사람이 사용할 수 있는 페이지 에는 /auth/를 붙인다. -->
 				</c:when>
 
@@ -39,11 +41,18 @@
 					<ul class="navbar-nav"><!-- /auth/를 붙이지 않으면 인증된 사용자만 이용할 수 있는 페이지 -->
 						<li class="nav-item"><a class="nav-link" href="/board/saveForm">글쓰기</a></li>
 						<li class="nav-item"><a class="nav-link" href="/user/updateForm">회원정보</a></li>
+						<li class="nav-item"><a class="nav-link" href="/guest/guestBook">방명록</a></li>
 						<li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
+						
 					</ul>
 				</c:otherwise>
 			</c:choose>
-
+			
 		</div>
+		<form class="form-inline" action="/" method="GET">
+			    <input class="form-control mr-sm-2" type="text" name="search" placeholder="게시글 검색">
+			    <button class="btn btn-primary"  type="submit" >검색</button>
+		</form>
 	</nav>
 	<br />
+	

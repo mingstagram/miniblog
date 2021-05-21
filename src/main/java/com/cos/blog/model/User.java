@@ -42,14 +42,15 @@ public class User {
 	private String password; 
 	
 	@Column(nullable = false, length = 50) 
-	private String email;
+	private String email; 
 	 
 	// @ColumnDefault("user")
 	// DB는 RoleType이 없음.
 	@Enumerated(EnumType.STRING)
 	private RoleType role; // Enum을 쓰는게 좋다. // ADMIN, USER
 	
-	private String oauth; 
+	@Enumerated(EnumType.STRING)
+	private SnsLogin oauth; 
 	
 	@CreationTimestamp // 시간이 자동 입력
 	private Timestamp createDate;

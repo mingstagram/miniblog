@@ -12,6 +12,12 @@ let index = {
 		$("#btn-reply-save").on("click", ()=>{ 
 			this.replySave();
 		});
+		$("#btn-like").on("click", ()=>{ 
+			this.like();
+		});
+		$("#btn-unlike").on("click", ()=>{ 
+			this.unlike();
+		});
 	},
 	 
 	save:function(){ 
@@ -121,6 +127,23 @@ let index = {
 			alert(JSON.stringify(error))
 		}); 
 	},
+	
+	like:function(){  
+		var id = $("#id").text();    
+		$.ajax({ 
+			method: "POST",
+			url: "/api/boardlike/"+id,
+			data: JSON.stringify(id),
+			contentType: "application/json; charset=utf-8", 
+			dataType: "json", 
+		}).done(function(resp){
+			// 성공 
+			location.href=`/board/${id}`;
+		}).fail(function(error){
+			// 실패
+			alert(JSON.stringify(error))
+		});  
+	} 
 	
 }
 

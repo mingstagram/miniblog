@@ -8,7 +8,7 @@ server:
       force: true
     
 spring:
-  mvc:
+  mvc: 
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
@@ -44,4 +44,5 @@ cos:
   key: cos1234
   email: mandoo1021
   password: 1184629k
+  facebookEmail: coopspring@coopbiz.kr
   
