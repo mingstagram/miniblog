@@ -17,7 +17,9 @@ import org.hibernate.annotations.DynamicInsert;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // ORM -> Java(다른언어) Object -> 테이블로 매핑해주는 기술 (편리함)
 
