@@ -36,7 +36,7 @@
 ```sql
 create user 'mini'@'%' identified by 'mini1234';
 GRANT ALL PRIVILEGES ON *.* TO 'mini'@'%';
-create database photogram;
+create database miniblog;
 ```
 
 ### yml 설정
