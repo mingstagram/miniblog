@@ -37,12 +37,12 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: mandoo1021
-    password: 1184629k
+    username: {secret}
+    password: {secret}
        
 cos:
   key: cos1234
   email: mandoo1021
-  password: Rlaalsrnr1@
+  password: {secret}
   facebookEmail: coopspring@coopbiz.kr
   
